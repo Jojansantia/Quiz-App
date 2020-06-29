@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      <div className="w-2/5 m-auto my-5">
+      <div className="w-4/5 md:w-2/5 m-auto my-5">
         <Header/>
         <Quiz
           

@@ -1,13 +1,19 @@
 import React, {useState} from 'react';
 import Error from './Error';
+import { Line } from 'rc-progress';
 
 const Pregunta = () => {
 
     const [respuesta, guardarRespuesta] = useState('')
     
-    const [preguntas] = useState(["¿Cómo te llamas?","¿Cúal es tu apellido?","¿Cúantos años tienes?"])
-    const [respuestas] = useState(["Jojan","Guzman","21"])
-    const [errores, guardarErrores] = useState([])
+    const [preguntas] = useState([
+        "¿Quién escribió La Odisea?",
+        "¿En qué país se encuentra la torre de Pisa?",
+        "¿Cuál es el país más grande del mundo?",
+        "Si 50 es el 100%, ¿Cuánto es el 90%?"
+    ])
+    const [respuestas] = useState(["Homero","Italia","Rusia", "45"])
+    const [errores, guardarErrores] = useState(["","","",""])
     
     const [num, cambiarnum] = useState(0)
     
@@ -23,30 +29,37 @@ const Pregunta = () => {
             guardarRespuesta('')
             cambiarnum(num+1)
         }else{
-            guardarErrores([...errores, respuestas[num]])
+            errores[num]= respuestas[num]
+            console.log(errores[num]);
+            
             guardarRespuesta('')
             cambiarnum(num+1)
         }
     }
 
-    console.log(errores);
-    console.log(num);
-    
     return (  
         <>
+        <div className="flex my-2 justify-center px-6">
+                        <Line className="w-11/12" percent={num*25} strokeWidth="4" strokeColor='#3FC7FA' />
+                        <h3 className="w-1/12 ml-3">{num*25}%</h3>
+                    </div>
             {num !== 4 ?
                 <>
-                    <div className="flex justify-around my-2">
+                    
+
+                    <div className="flex justify-between px-6 my-2 text-gray-700 text-2xl font-bold">
                         <p>Level {num+1}</p>
                         <p>{num+1}/4</p>
                     </div>
-                    <form onSubmit={handleSubmit}>
-                        <label className="float-left  ml-8 my-2">
+                    <label className=" text-gray-700 text-1xl font-bold ">
                             {preguntas[num]}
-                        </label>
-                    
+                        </label> 
+                    <form onSubmit={handleSubmit}>
+                     
+                    <div className="flex justify-around my-2">
+
                         <input
-                            className="border w-4/5 mb-2 p-2 mr-3 rounded"
+                            className="border w-3/5 mb-2 p-2 rounded"
                             type="text"
                             name="pregunta"
                             placeholder="Responde aquí"
@@ -56,20 +69,29 @@ const Pregunta = () => {
                         />
                         <button
                             type="sumbit "
-                            className="  bg-green-600 p-2 text-white rounded"
+                            className="w-1/5 bg-green-600 mb-2 p-2 text-white rounded hover:bg-green-800"
                         >
                             Next
                         </button>
+                    </div>
+
                     </form>
                 </>
             :
-                errores.map((error, i) => (
+            <>
+<h1 className="text-center text-gray-700 text-2xl font-bold my-2">
+                    Respuestas correctas
+                </h1>
+                {errores.map((error, i) => (
                         <Error
-                        key={i}
-                        error={error}
+                            preguntas={preguntas[i]}
+                            key={i}
+                            error={error}
                         />
-                ))
+                ))}
+                </>
             }
+            
         </>
     );
 }
