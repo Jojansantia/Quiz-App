@@ -32,9 +32,6 @@ const Quiz = () => {
         cambiarnum(num+1)
     }
 
-    console.log(errores);
-    
-
     return (  
 
         <>  
@@ -94,7 +91,6 @@ const Quiz = () => {
                                 ))}
                             </>
                         }
-                    
                         <button
                             type="sumbit"
                             onClick={() => cambiarnum(0) }
