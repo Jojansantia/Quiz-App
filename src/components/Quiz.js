@@ -5,29 +5,40 @@ import { Line } from 'rc-progress';
 const Quiz = () => {
 
     const [num, cambiarnum] = useState(0)
+    const [alerta, cambiarAlerta] = useState(false)
     const [respuesta, guardarRespuesta] = useState('')
     const [respuestas] = useState(["Homero", "Italia", "Rusia", "45"])
     const [errores] = useState(["", "", "", ""])
     const [preguntas] = useState([
         "¿Quién escribió La Odisea?",
-        "¿En qué país se encuentra la torre de Pisa?",
+        "¿En qué país se encuentra la torre inclinada de Pisa?",
         "¿Cuál es el país más grande del mundo?",
         "Si 50 es el 100%, ¿Cuánto es el 90%?"
     ])
     
     const handleSubmit = e => {
         e.preventDefault();
-        if(respuesta !== respuestas[num]){
+        if(respuesta.trim() === ''){
+            cambiarAlerta(true)
+            setTimeout(() => {
+                cambiarAlerta(false)
+            }, 2000);
+            return;
+        }
+        if(respuesta.toLowerCase() !== respuestas[num].toLowerCase()){
             errores[num]= respuestas[num]
         }
         guardarRespuesta('')
         cambiarnum(num+1)
     }
 
+    console.log(errores);
+    
+
     return (  
 
         <>  
-            <div className="border mt-5 text-center">
+            <div className="border rounded mt-5 text-center">
                 <h1 className="text-center text-gray-700 text-3xl font-bold">
                     Cultura general
                 </h1>
@@ -60,19 +71,37 @@ const Quiz = () => {
                                 Next
                             </button>
                         </form>
+                        {alerta && <p className="bg-red-400 font-bold text-center  text-white  p-2 my-2 mx-4">¡Error! Responda la pregunta</p>}
                     </>
                 :
-                    <>
-                        <h2 className="text-center text-gray-700 text-2xl font-bold my-3">
-                            Revisa las respuestas incorrectas
-                        </h2>
-                        {errores.map((error, i) => (
-                            <Error
-                                preguntas={preguntas[i]}
-                                key={i}
-                                error={error}
-                            />
-                        ))}
+                    <>  
+                        {errores.every(e => e === "") ? 
+                            <div className="text-center text-gray-700 font-bold my-3">
+                                <h2 className="text-2xl">¡Felicidades!</h2>
+                                <p>Respondiste correctamente todas las preguntas</p>
+                            </div> 
+                        :
+                            <>
+                                <h2 className="text-center text-gray-700 text-2xl font-bold my-3">
+                                    Revisa las respuestas incorrectas
+                                </h2>
+                                {errores.map((error, i) => (
+                                    <Error
+                                        preguntas={preguntas[i]}
+                                        key={i}
+                                        error={error}
+                                    />
+                                ))}
+                            </>
+                        }
+                    
+                        <button
+                            type="sumbit"
+                            onClick={() => cambiarnum(0) }
+                            className="w-2/5 bg-green-600 mb-2 p-2 text-white rounded hover:bg-green-800"
+                        >
+                            Reiniciar Quiz
+                        </button>
                     </>
                 }
             </div>
